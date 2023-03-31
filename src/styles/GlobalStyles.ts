@@ -20,4 +20,8 @@ html {
   -webkit-font-smoothing: antialiased;
   scroll-behavior: smooth;
 }
+
+body {
+  font-family: 'Alkatra', cursive;
+}
 `;

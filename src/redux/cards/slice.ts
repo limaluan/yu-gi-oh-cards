@@ -1,25 +1,77 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../store";
+import { api } from "../../services/api";
+
+interface ICard {
+  name: string;
+  card_images: [
+    image: {
+      image_url: string;
+    }
+  ];
+  quantity: number;
+}
 
 interface ICardsState {
-  cards: string[];
+  cards: ICard[];
+  deck: ICard[];
+  showCard: ICard;
+  status: "idle" | "loading" | "failed";
 }
 
 const initialState: ICardsState = {
   cards: [],
+  deck: [],
+  showCard: {} as ICard,
+  status: "idle",
 };
+
+export const fetchCards = createAsyncThunk("cards/fetchCards", async () => {
+  try {
+    const { data } = await api.get("");
+    return data.data;
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 const cardSlice = createSlice({
   name: "cards",
   initialState,
   reducers: {
-    getAllCards: (state, action) => {
-      state.cards = ["teste1, teste2, teste3"];
+    nextCard: (state) => {
+      const index = state.cards.findIndex(
+        (card) => card.name === state.showCard.name
+      );
+      state.showCard = state.cards[index + 1];
     },
+    previousCard: (state) => {
+      const index = state.cards.findIndex(
+        (card) => card.name === state.showCard.name
+      );
+      index ? (state.showCard = state.cards[index - 1]) : "";
+    },
+    addToDeck: (state, { payload }) => {
+      state.deck = [...state.deck, payload];
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchCards.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchCards.fulfilled, (state, { payload }) => {
+        state.status = "idle";
+        state.cards = payload;
+        state.showCard = state.cards[0];
+      })
+      .addCase(fetchCards.rejected, (state) => {
+        state.status = "failed";
+      });
   },
 });
 
-export const { getAllCards } = cardSlice.actions;
+export const { addToDeck, nextCard, previousCard } = cardSlice.actions;
 
 // Aqui eu entro no slice de nome "cards" e pego o estado para exportar
 export const selectCards = (state: RootState) => state.cards;
