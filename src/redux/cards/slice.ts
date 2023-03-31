@@ -54,6 +54,10 @@ const cardSlice = createSlice({
     addToDeck: (state, { payload }) => {
       state.deck = [...state.deck, payload];
     },
+    removeFromDeck: (state, { payload }) => {
+      const newDeck = state.deck.filter((card) => card.name != payload.name);
+      state.deck = newDeck;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -71,7 +75,7 @@ const cardSlice = createSlice({
   },
 });
 
-export const { addToDeck, nextCard, previousCard } = cardSlice.actions;
+export const { addToDeck, nextCard, previousCard, removeFromDeck } = cardSlice.actions;
 
 // Aqui eu entro no slice de nome "cards" e pego o estado para exportar
 export const selectCards = (state: RootState) => state.cards;

@@ -78,7 +78,7 @@ export const AppContainer = styled.main`
       display: grid;
       grid-template-columns: 1fr 1.5fr;
 
-      img {
+      .card {
         width: 80%;
         margin: auto;
 
@@ -88,10 +88,17 @@ export const AppContainer = styled.main`
         }
       }
 
+      .delete-icon {
+        width: 2rem;
+        cursor: pointer;
+      }
+
       div {
         display: flex;
-        flex-direction: column;
+        /* flex-direction: column; */
         justify-content: center;
+        align-items: center;
+        gap: 1rem;
 
         h2 {
           font-size: 2rem;

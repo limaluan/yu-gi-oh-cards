@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { AppContainer } from "./App.styles";
-import { addToDeck, fetchCards, nextCard, previousCard, selectCards } from "./redux/cards/slice";
+import { addToDeck, fetchCards, nextCard, previousCard, removeFromDeck, selectCards } from "./redux/cards/slice";
 import { useAppSelector, useAppDispatch } from "./redux/hooks";
 
 import closeImg from "./assets/close.png";
@@ -54,10 +54,11 @@ function App() {
           <hr />
           {deck.map((card, index) => (
             <li key={index}>
-              <img src={card.card_images[0].image_url} alt={card.name} />
+              <img className="card" src={card.card_images[0].image_url} alt={card.name} />
               <div>
                 <h2>{card.name}</h2>
-                <h3>{card.quantity}</h3>
+                {/* <h3>{card.quantity}</h3> */}
+                <img onClick={() => dispatch(removeFromDeck(card))} className="delete-icon" src="https://cdn-icons-png.flaticon.com/512/2891/2891491.png" alt="" />
               </div>
             </li>
           ))}
